@@ -4,6 +4,10 @@ on:
   repository_dispatch:
     types: [process-issue]
 
+concurrency:
+  group: process-issue
+  cancel-in-progress: false
+
 jobs:
   process:
     runs-on: ubuntu-latest
