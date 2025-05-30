@@ -280,5 +280,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Add artwork for app ${{ fromJson(steps.issue-data.outputs.result).app_id }}"
+            git pull --rebase origin main
             git push
           fi
