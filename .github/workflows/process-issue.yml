@@ -5,7 +5,7 @@ on:
     types: [process-issue]
 
 concurrency:
-  group: process-issue
+  group: process-issue-${{ github.event.client_payload.issue_number }}
   cancel-in-progress: false
 
 jobs:
@@ -282,6 +282,7 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Add artwork for app ${{ fromJson(steps.issue-data.outputs.result).app_id }}"
-            git pull --rebase origin main
-            git push
+            for i in {1..10}; do
+              git pull --rebase origin main && git push && break || sleep 10
+            done
           fi
