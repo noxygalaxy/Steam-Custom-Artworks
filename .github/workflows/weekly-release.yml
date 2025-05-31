@@ -29,6 +29,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Get new AppIDs since last release
+        id: new-appids
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 || echo "")
+          if [ -z "$LAST_TAG" ]; then
+            find artworks -name index.html | awk -F'/' '{print $3}' | sort -u > new_app_ids.txt
+          else
+            git diff --name-only $LAST_TAG HEAD -- artworks/*/*/index.html | awk -F'/' '{print $3}' | sort -u > new_app_ids.txt
+          fi
+          cat new_app_ids.txt
+
       - name: Take screenshots
         run: node scripts/screenshot.js
 
@@ -42,13 +53,13 @@ jobs:
         
       - name: Format release notes
         run: |
-          if [ -s game_ids.txt ]; then
-            FORMATTED_IDS=$(cat game_ids.txt | tr '\n' ', ' | sed 's/,$//')
+          if [ -s new_app_ids.txt ]; then
+            FORMATTED_IDS=$(cat new_app_ids.txt | tr '\n' ', ' | sed 's/,$//')
             echo "FORMATTED_IDS<<EOF" >> $GITHUB_ENV
             echo "$FORMATTED_IDS" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
           else
-            echo "FORMATTED_IDS=No AppIDs processed" >> $GITHUB_ENV
+            echo "FORMATTED_IDS=No new AppIDs" >> $GITHUB_ENV
           fi
       
       - name: Create release
@@ -67,5 +78,5 @@ jobs:
       - name: Clean up temporary files
         if: always()
         run: |
-          rm -f game_ids.txt
+          rm -f game_ids.txt new_app_ids.txt
           echo "Cleaned up temporary files"
