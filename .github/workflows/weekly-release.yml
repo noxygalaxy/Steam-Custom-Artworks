@@ -54,7 +54,7 @@ jobs:
       - name: Format release notes
         run: |
           if [ -s new_app_ids.txt ]; then
-            FORMATTED_IDS=$(while read id; do echo -n "[\`$id\`](https://steamdb.info/$id), "; done < new_app_ids.txt | sed 's/, $//')
+            FORMATTED_IDS=$(while read id; do echo -n "[\`$id\`](https://steamdb.info/app/$id), "; done < new_app_ids.txt | sed 's/, $//')
             echo "FORMATTED_IDS<<EOF" >> $GITHUB_ENV
             echo "$FORMATTED_IDS" >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
