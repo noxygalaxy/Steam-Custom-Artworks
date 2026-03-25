@@ -80,9 +80,8 @@ jobs:
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
-          if [ -f game_ids.txt ]; then
-            rm -f game_ids.txt
-            git add game_ids.txt
+          git rm --ignore-unmatch game_ids.txt || true
+          if ! git diff --staged --quiet; then
             git commit -m "Clear game_ids.txt after release"
             git push
           fi
