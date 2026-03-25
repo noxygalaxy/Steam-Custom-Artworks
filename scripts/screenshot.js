@@ -28,7 +28,7 @@ const path = require('path');
   const gameIds = [];
   const elementIds = ['grid', 'p', 'hero'];
   const blankPage = await browser.newPage();
-  await blankPage.setViewport({width: 10, height: 10});
+  await blankPage.setViewport({width: 1, height: 1});
   const transparentLogoBuffer = await blankPage.screenshot({ omitBackground: true });
   await blankPage.close();
 
